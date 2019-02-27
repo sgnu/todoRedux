@@ -68,7 +68,7 @@ func mainMenu() {
 		clearScreen()
 		addTask(tasks)
 		mainMenu()
-	case "Complete task":
+	case "Complete a task":
 		clearScreen()
 		completeTask(tasks)
 		mainMenu()
@@ -79,21 +79,18 @@ func mainMenu() {
 
 //Asks the user for prompts to add a new task
 func addTask(tasks []Task) {
-	var title, importantString string
+	var importantString string
 	var important bool
 
 	date := getDate()
-
-	titlePrompt := promptui.Prompt{
-		Label: "Enter the title",
-	}
 
 	importantPrompt := promptui.Prompt{
 		Label:     "Is this an important task",
 		IsConfirm: true,
 	}
 
-	title, _ = titlePrompt.Run()
+	title := getUserPrompt("title")
+
 	importantString, _ = importantPrompt.Run()
 	if importantString == "y" {
 		important = true
@@ -124,6 +121,15 @@ func completeTask(tasks []Task) {
 	writeToFile(tasks)
 }
 
+func getUserPrompt(label string) string {
+	prompt := promptui.Prompt{
+		Label: "Enter the " + label,
+	}
+
+	userInput, _ := prompt.Run()
+	return userInput
+}
+
 //Creates a prompt asking for a month and day
 func getDate() Date {
 	monthPrompt := promptui.Select{
@@ -150,10 +156,10 @@ func printTasks(tasks []Task) {
 	for i := 0; i < len(tasks); i++ {
 		important := ""
 		if tasks[i].Important {
-			important = goterm.Color("!**!", goterm.RED)
+			important = goterm.Color("!*!", goterm.RED)
 		}
 
-		fmt.Printf("%4s[%02d/%02d]%40s\n", important, tasks[i].Due.Month, tasks[i].Due.Day, tasks[i].Title)
+		fmt.Printf("%3s[%10s|%02d/%02d]%40s\n", important, tasks[i].Category, tasks[i].Due.Month, tasks[i].Due.Day, tasks[i].Title)
 	}
 }
 
