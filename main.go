@@ -38,6 +38,11 @@ func compareDates(d1, d2 Date) bool {
 	}
 }
 
+func numberVal(input string) error {
+	_, err := strconv.Atoi(input)
+	return err
+}
+
 func main() {
 	clearScreen()
 	mainMenu()
@@ -73,31 +78,10 @@ func mainMenu() {
 
 //Asks the user for prompts to add a new task
 func addTask(tasks []Task) {
-	var month, day int
-	var title, dayString, importantString string
+	var title, importantString string
 	var important bool
 
-	numberVal := func(input string) error {
-		_, err := strconv.Atoi(input)
-		return err
-	}
-
-	monthPrompt := promptui.Select{
-		Label: "Select the month",
-		Items: []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"},
-		Size:  12,
-	}
-
-	month, _, _ = monthPrompt.Run()
-	month++
-
-	dayPrompt := promptui.Prompt{
-		Label:    "Enter the day",
-		Validate: numberVal,
-	}
-
-	dayString, _ = dayPrompt.Run()
-	day, _ = strconv.Atoi(dayString)
+	date := getDate()
 
 	titlePrompt := promptui.Prompt{
 		Label: "Enter the title",
@@ -116,7 +100,7 @@ func addTask(tasks []Task) {
 		important = false
 	}
 
-	task := Task{Due: Date{Month: month, Day: day}, Title: title, Important: important}
+	task := Task{Due: date, Title: title, Important: important}
 	tasks = append(tasks, task)
 	writeToFile(tasks)
 }
@@ -137,6 +121,27 @@ func completeTask(tasks []Task) {
 	index, _, _ := completionPrompt.Run()
 	tasks = append(tasks[:index], tasks[index+1:]...)
 	writeToFile(tasks)
+}
+
+//Creates a prompt asking for a month and day
+func getDate() Date {
+	monthPrompt := promptui.Select{
+		Label: "Select the month",
+		Items: []string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"},
+		Size:  12,
+	}
+
+	dayPrompt := promptui.Prompt{
+		Label:    "Enter the day",
+		Validate: numberVal,
+	}
+
+	month, _, _ := monthPrompt.Run()
+	month++
+	dayString, _ := dayPrompt.Run()
+	day, _ := strconv.Atoi(dayString)
+
+	return Date{Month: month, Day: day}
 }
 
 //Prints out the task list
