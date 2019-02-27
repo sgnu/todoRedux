@@ -14,6 +14,7 @@ import (
 //Task represents a task in the todo list
 type Task struct {
 	Due       Date   `json:"dueDate"`
+	Category  string `json:"category"`
 	Title     string `json:"title"`
 	Important bool   `json:"important"`
 }
