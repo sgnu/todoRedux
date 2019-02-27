@@ -51,7 +51,7 @@ func mainMenu() {
 	printTasks(tasks)
 	prompt := promptui.Select{
 		Label: "What would you like to do?",
-		Items: []string{"New task", "Complete task", "Exit"},
+		Items: []string{"New task", "Complete a task", "Exit"},
 	}
 
 	_, selection, err := prompt.Run()
@@ -71,6 +71,7 @@ func mainMenu() {
 	}
 }
 
+//Asks the user for prompts to add a new task
 func addTask(tasks []Task) {
 	var month, day int
 	var title, dayString, importantString string
@@ -120,6 +121,7 @@ func addTask(tasks []Task) {
 	writeToFile(tasks)
 }
 
+//Asks the user which task to mark as complete and remove from the list
 func completeTask(tasks []Task) {
 	template := &promptui.SelectTemplates{
 		Active:   `{{  .Due.Month  |  green  }}/{{  .Due.Day  |  green  }} - {{  .Title  |  green  }}`,
