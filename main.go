@@ -111,7 +111,7 @@ func completeTask(tasks []Task) {
 	}
 
 	completionPrompt := promptui.Select{
-		Label:     "Which task are you completing",
+		Label:     "Choose a task to complete",
 		Items:     tasks,
 		Templates: template,
 	}
@@ -121,6 +121,7 @@ func completeTask(tasks []Task) {
 	writeToFile(tasks)
 }
 
+//Returns a string with user input
 func getUserPrompt(label string) string {
 	prompt := promptui.Prompt{
 		Label: "Enter the " + label,
@@ -130,7 +131,7 @@ func getUserPrompt(label string) string {
 	return userInput
 }
 
-//Creates a prompt asking for a month and day
+//Returns a Date object with user input
 func getDate() Date {
 	monthPrompt := promptui.Select{
 		Label: "Select the month",
