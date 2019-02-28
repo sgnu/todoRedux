@@ -105,19 +105,12 @@ func addTask(tasks []Task) {
 
 //Asks the user which task to mark as complete and remove from the list
 func completeTask(tasks []Task) {
-	template := &promptui.SelectTemplates{
-		Active:   `{{  .Due.Month  |  green  }}/{{  .Due.Day  |  green  }} - {{  .Title  |  green  }}`,
-		Inactive: `{{  .Due.Month  |  blue  }}/{{  .Due.Day  |  blue  }} - {{  .Title  }}`,
+	userInput := getTask("complete", tasks)
+	if userInput >= len(tasks) {
+		return
 	}
 
-	completionPrompt := promptui.Select{
-		Label:     "Choose a task to complete",
-		Items:     tasks,
-		Templates: template,
-	}
-
-	index, _, _ := completionPrompt.Run()
-	tasks = append(tasks[:index], tasks[index+1:]...)
+	tasks = append(tasks[:userInput], tasks[userInput+1:]...)
 	writeToFile(tasks)
 }
 
@@ -150,6 +143,27 @@ func getDate() Date {
 	day, _ := strconv.Atoi(dayString)
 
 	return Date{Month: month, Day: day}
+}
+
+//Returns the index of a task from the list or a "Cancel" task
+func getTask(label string, tasks []Task) int {
+	exit := Task{Title: "Cancel"}
+	templist := append(tasks, exit)
+
+	template := &promptui.SelectTemplates{
+		Active:   `{{  .Due.Month  |  green  }}/{{  .Due.Day  |  green  }} - {{  .Title  |  green  }}`,
+		Inactive: `{{  .Due.Month  |  blue  }}/{{  .Due.Day  |  blue  }} - {{  .Title  }}`,
+	}
+
+	prompt := promptui.Select{
+		Label:     "Choose a task to " + label,
+		Items:     templist,
+		Templates: template,
+	}
+
+	index, _, _ := prompt.Run()
+
+	return index
 }
 
 //Prints out the task list
