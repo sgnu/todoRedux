@@ -51,13 +51,12 @@ func main() {
 
 //Acts as the main menu for todo
 func mainMenu() {
-	clearScreen()
 	tasks := readFromFile()
 	sortTasks(tasks)
-	printTasks(tasks)
+	printAllTasks(tasks)
 	prompt := promptui.Select{
 		Label: "What would you like to do?",
-		Items: []string{"New task", "Complete a task", "Exit"},
+		Items: []string{"New task", "Edit a task", "Complete a task", "Exit"},
 	}
 
 	_, selection, err := prompt.Run()
@@ -67,10 +66,17 @@ func mainMenu() {
 	case "New task":
 		clearScreen()
 		addTask(tasks)
+		clearScreen()
+		mainMenu()
+	case "Edit a task":
+		clearScreen()
+		editTask(tasks)
+		clearScreen()
 		mainMenu()
 	case "Complete a task":
 		clearScreen()
 		completeTask(tasks)
+		clearScreen()
 		mainMenu()
 	case "Exit":
 		return
@@ -86,6 +92,33 @@ func addTask(tasks []Task) {
 
 	task := Task{Due: date, Category: category, Title: title, Important: important}
 	tasks = append(tasks, task)
+	writeToFile(tasks)
+}
+
+//Asks the user which task and property to edit
+func editTask(tasks []Task) {
+	index := getTask("edit", tasks)
+	if index >= len(tasks) {
+		return
+	}
+
+	clearScreen()
+	printTask(tasks[index])
+	prompt := promptui.Select{
+		Label: "Select a property to change",
+		Items: []string{"Important", "Category", "Due Date", "Title"},
+	}
+	_, selection, _ := prompt.Run()
+	switch selection {
+	case "Important":
+		tasks[index].Important = getBool("Is this important")
+	case "Category":
+		tasks[index].Category = getUserPrompt("category")
+	case "Due Date":
+		tasks[index].Due = getDate()
+	case "Title":
+		tasks[index].Title = getUserPrompt("title")
+	}
 	writeToFile(tasks)
 }
 
@@ -152,8 +185,8 @@ func getTask(label string, tasks []Task) int {
 	templist := append(tasks, exit)
 
 	template := &promptui.SelectTemplates{
-		Active:   `{{  .Due.Month  |  green  }}/{{  .Due.Day  |  green  }} - {{  .Title  |  green  }}`,
-		Inactive: `{{  .Due.Month  |  blue  }}/{{  .Due.Day  |  blue  }} - {{  .Title  }}`,
+		Active:   `{{  .Category  |  green  }}|{{  .Due.Month  |  green  }}/{{  .Due.Day  |  green  }} - {{  .Title  |  green  }}`,
+		Inactive: `{{  .Category  |  blue  }}|{{  .Due.Month  |  blue  }}/{{  .Due.Day  |  blue  }} - {{  .Title  }}`,
 	}
 
 	prompt := promptui.Select{
@@ -168,7 +201,7 @@ func getTask(label string, tasks []Task) int {
 }
 
 //Prints out the task list
-func printTasks(tasks []Task) {
+func printAllTasks(tasks []Task) {
 	for i := 0; i < len(tasks); i++ {
 		important := ""
 		if tasks[i].Important {
@@ -177,6 +210,16 @@ func printTasks(tasks []Task) {
 
 		fmt.Printf("%3s[%10s|%02d/%02d]%40s\n", important, tasks[i].Category, tasks[i].Due.Month, tasks[i].Due.Day, tasks[i].Title)
 	}
+}
+
+//Prints out a singular task
+func printTask(task Task) {
+	important := ""
+	if task.Important {
+		important = goterm.Color("!*!", goterm.RED)
+	}
+
+	fmt.Printf("%3s[%10s|%02d/%02d]%40s\n", important, task.Category, task.Due.Month, task.Due.Day, task.Title)
 }
 
 //Sorts a tasks list using insertion sort
