@@ -85,9 +85,9 @@ func mainMenu() {
 
 //Asks the user for prompts to add a new task
 func addTask(tasks []Task) {
+	important := getBool("Is this important")
 	category := getUserPrompt("category")
 	date := getDate()
-	important := getBool("Is this important")
 	title := getUserPrompt("title")
 
 	task := Task{Due: date, Category: category, Title: title, Important: important}
@@ -208,7 +208,7 @@ func printAllTasks(tasks []Task) {
 			important = goterm.Color("!*!", goterm.RED)
 		}
 
-		fmt.Printf("%3s[%10s|%02d/%02d]%40s\n", important, tasks[i].Category, tasks[i].Due.Month, tasks[i].Due.Day, tasks[i].Title)
+		fmt.Printf("%3s[\u001b[35m%10s\u001b[0m|\u001b[36m%02d/%02d\u001b[0m]%30s\n", important, tasks[i].Category, tasks[i].Due.Month, tasks[i].Due.Day, tasks[i].Title)
 	}
 }
 
@@ -219,7 +219,7 @@ func printTask(task Task) {
 		important = goterm.Color("!*!", goterm.RED)
 	}
 
-	fmt.Printf("%3s[%10s|%02d/%02d]%40s\n", important, task.Category, task.Due.Month, task.Due.Day, task.Title)
+	fmt.Printf("%3s[%10s|%02d/%02d]%30s\n", important, task.Category, task.Due.Month, task.Due.Day, task.Title)
 }
 
 //Sorts a tasks list using insertion sort
