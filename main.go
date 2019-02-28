@@ -79,26 +79,12 @@ func mainMenu() {
 
 //Asks the user for prompts to add a new task
 func addTask(tasks []Task) {
-	var importantString string
-	var important bool
-
+	category := getUserPrompt("category")
 	date := getDate()
-
-	importantPrompt := promptui.Prompt{
-		Label:     "Is this an important task",
-		IsConfirm: true,
-	}
-
+	important := getBool("Is this important")
 	title := getUserPrompt("title")
 
-	importantString, _ = importantPrompt.Run()
-	if importantString == "y" {
-		important = true
-	} else {
-		important = false
-	}
-
-	task := Task{Due: date, Title: title, Important: important}
+	task := Task{Due: date, Category: category, Title: title, Important: important}
 	tasks = append(tasks, task)
 	writeToFile(tasks)
 }
