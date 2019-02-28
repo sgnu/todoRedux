@@ -1,6 +1,7 @@
 # todoRedux
 
 A CLI todo list app with somewhat of an emphasis on *a e s t h e t i c s*. A successor to my [todo app](https://github.com/sgnu/todo).
+![screenshot](screenshot.png)
 
 ## Installation
 
