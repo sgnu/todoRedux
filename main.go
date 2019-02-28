@@ -124,6 +124,21 @@ func getUserPrompt(label string) string {
 	return userInput
 }
 
+//Returns a bool with user input
+func getBool(label string) bool {
+	prompt := promptui.Prompt{
+		Label:     label,
+		IsConfirm: true,
+	}
+
+	userInput, _ := prompt.Run()
+	if userInput == "y" {
+		return true
+	}
+
+	return false
+}
+
 //Returns a Date object with user input
 func getDate() Date {
 	monthPrompt := promptui.Select{
