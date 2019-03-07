@@ -202,19 +202,16 @@ func getTask(label string, tasks []Task) int {
 
 //Prints out the task list
 func printAllTasks(tasks []Task) {
-	fmt.Println("\u001b[37m█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█")
-
-	fmt.Println("█                                                         █\u001b[0m")
+	fmt.Println()
 	for i := 0; i < len(tasks); i++ {
 		important := ""
 		if tasks[i].Important {
 			important = goterm.Color("!*!", goterm.RED)
 		}
 
-		fmt.Printf("\u001b[37m█\u001b[0m   %3s[\u001b[35m%10s\u001b[0m|\u001b[36m%02d/%02d\u001b[0m]%30s   \u001b[37m█\n", important, tasks[i].Category, tasks[i].Due.Month, tasks[i].Due.Day, tasks[i].Title)
+		fmt.Printf(" %3s\u001b[35m %10s\u001b[0m|\u001b[36m%02d/%02d\u001b[0m %s\n", important, tasks[i].Category, tasks[i].Due.Month, tasks[i].Due.Day, tasks[i].Title)
 	}
-	fmt.Println("\u001b[37m█                                                         █")
-	fmt.Println("█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█\u001b[0m")
+	fmt.Println()
 }
 
 //Prints out a singular task
