@@ -11,7 +11,7 @@ todoRedux can be installed using the command:
 go get github.com/sgnu/todoRedux
 ```
 
-You will need to create a tasks file (with no extension) in your `$GOPATH` directory. It can be empty, but the file must exist.
+You will need to create a `tasks file` (with no extension) in your `$GOPATH` directory. It can be empty, but the file must exist.
 
 ## Usage
 
